@@ -32,6 +32,8 @@ class ListNode:
         if self.next:
             self.next.prev = self.prev
 
+    def __str__(self):
+        return f'{self.value}, {self.prev}, {self.next}'
 
 """Our doubly-linked list class. It holds references to
 the list's head and tail nodes."""
@@ -48,25 +50,61 @@ class DoublyLinkedList:
     as the new head of the list. Don't forget to handle 
     the old head node's previous pointer accordingly."""
     def add_to_head(self, value):
-        pass
+        #checking to see if the stack is empty
+        if self.head == None:
+           #if it's empyty create the new node and track it as the head
+           self.head = ListNode(value)
+        else:
+            #if the stack has something in it create the new node
+            new_node = ListNode(value)
+            #set the new node next link to the current head
+            new_node.next = self.head
+            #set current head's previous link to the new node
+            self.head.prev = new_node
+            #change the head tracker to the new node
+            self.head = new_node
 
     """Removes the List's current head node, making the
     current head's next node the new head of the List.
     Returns the value of the removed Node."""
     def remove_from_head(self):
-        pass
+        #check if the stack is empty
+        if self.head == None:
+            return None
+        else:
+            #get a reference to the top of the stack
+            popped_node = self.head
+            #delete will reaarnge the links
+            self.head.delete()
+            return popped_node.value
+
 
     """Wraps the given value in a ListNode and inserts it 
     as the new tail of the list. Don't forget to handle 
     the old tail node's next pointer accordingly."""
     def add_to_tail(self, value):
-        pass
+        # checks if the queue is empty and sets the head and tail to the same node
+        if self.tail == None:
+            self.tail = ListNode(value)
+            self.head = self.tail
+        else:
+            #create the new node and set the new node's previous to the current tail and then move the pointer to the newly creted node
+            new_node = ListNode(value)
+            new_node.prev = self.tail
+            self.tail.next = new_node
+            self.tail = new_node
+
 
     """Removes the List's current tail node, making the 
     current tail's previous node the new tail of the List.
     Returns the value of the removed Node."""
     def remove_from_tail(self):
-        pass
+        if self.tail == None:
+            return None
+        else:
+            popped_node = self.tail
+            self.tail.delete()
+            return popped_node
 
     """Removes the input node from its current spot in the 
     List and inserts it as the new head node of the List."""
@@ -81,8 +119,37 @@ class DoublyLinkedList:
     """Removes a node from the list and handles cases where
     the node was the head or the tail"""
     def delete(self, node):
-        pass
+        temp = self.head
+        while temp.next is not None:
+            print(temp)
+            if temp == node:
+                popped_node = temp
+                temp.delete()
+                return popped_node
+            else:
+                temp.next
         
     """Returns the highest value currently in the list"""
     def get_max(self):
-        pass
+        temp = self.head
+        largest_number = temp.value
+        # print(temp.next.value)
+        while temp.next is not None:
+            if temp.next.value > largest_number:
+                largest_number = temp.next.value
+            else:
+                temp = temp.next
+        return largest_number  
+    def __str__(self):
+        return f'{self.head.value}'
+
+test = DoublyLinkedList()
+test.add_to_tail(1)
+test.add_to_tail(20000)
+test.add_to_tail(3)
+test.add_to_tail(100)
+test.add_to_tail(4)
+test.add_to_tail(500)
+
+number = test.get_max()
+print(number)
