@@ -9,6 +9,7 @@ This part of the project comprises two days:
 2. Implement the `in_order_print`, `bft_print`, and `dft_print` methods
    on the BSTNode class.
 """
+from collections import deque
 class BSTNode:
     def __init__(self, value):
         self.value = value
@@ -17,19 +18,16 @@ class BSTNode:
 
     # Insert the given value into the tree
     def insert(self, value):
-        if self.left is None and self.right is None:
-            self.value = value
-        else:
-            if value < self.value:
-                if self.left is None:
-                    self.left = value
-                else: 
-                    self.insert(value)
+        if value < self.value:
+            if not self.left:
+                self.left = BSTNode(value)
             else:
-                if self.right is None:
-                    self.right = value
-                else:
-                    self.insert(value)
+                self.left.insert(value)
+        else:
+            if not self.right:
+                self.right = BSTNode(value)
+            else:
+                self.right.insert(value)
 
     # Return True if the tree contains the value
     # False if it does not
@@ -47,19 +45,21 @@ class BSTNode:
 
     # Return the maximum value found in the tree
     def get_max(self):
-        #only be moving to the right side
-        #checking until the last node's right is None 
-        #if the last node's right is None that is the largest and retun it's value
         current = self
-        while current.right:
+        max_val = self.value
+        while current:
+            if current.value > max_val:
+                max_val = current.value
             current = current.right
-        return current.value
+        return max_val
 
     # Call the function `fn` on the value of each node
     def for_each(self, fn):
-        #traverse each node to the left until it reaches none
-        #traverse each node to the right until it reaches none
-        pass
+       fn(self.value)
+       if self.left:
+           self.left.for_each(fn)
+       if self.right:
+           self.right.for_each(fn)
     
     # Part 2 -----------------------
 
@@ -74,12 +74,31 @@ class BSTNode:
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        pass
+      queue = deque()
+      queue.append(self)
+
+      while len(queue) > 0:
+          current = queue.popleft()
+          if current.left:
+              queue.append(current.left)
+          if current.right:
+              queue.append(current.right)
+          print(current.value)
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self, node):
-        pass
+        stack = deque()
+        stack.append(self)
+        
+        while len(stack) > 0:
+            current = stack.pop()
+            if current.left:
+                stack.append(current.left)
+            if current.right:
+                stack.append(current.right)
+            print(current.value)
+
 
     # Stretch Goals -------------------------
     # Note: Research may be required
@@ -94,8 +113,3 @@ class BSTNode:
 
     def __str__(self):
         return f'{self.value}'
-
-root = BSTNode(5)
-# root.insert(BSTNode(4))
-
-root.in_order_print(root)
